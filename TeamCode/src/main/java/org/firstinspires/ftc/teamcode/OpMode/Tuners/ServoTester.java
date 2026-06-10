@@ -22,15 +22,14 @@ public class ServoTester extends OpMode {
 
     private double servoPosition = 0;
 
+    //claw open is 0.65, closed is 0.515
+
 
     @Override
     public void init(){
         player1 = new GamepadEx(gamepad1);
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
-        intake.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        servo = hardwareMap.get(Servo.class, "gateRight");
+        servo = hardwareMap.get(Servo.class, "claw");
         //servo = hardwareMap.get(Servo.class, "hoodServo");
 
         servo.setPosition(0);
