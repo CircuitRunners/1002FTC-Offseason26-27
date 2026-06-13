@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.allendiffy;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -46,6 +47,8 @@ public class DiffySwerveModule {
         motorA = hw.get(DcMotorEx.class, motorAName);
         motorB = hw.get(DcMotorEx.class, motorBName);
         azimuthEncoder = hw.get(AnalogInput.class, encoderName);
+
+        motorA.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motorA.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
