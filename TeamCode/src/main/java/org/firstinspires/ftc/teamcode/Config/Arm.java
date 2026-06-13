@@ -21,7 +21,7 @@ public class Arm {
         //servo = hardwareMap.get(Servo.class, "hoodServo");
 
 
-        armRight.setDirection(Servo.Direction.REVERSE);
+       // armRight.setDirection(Servo.Direction.REVERSE);
 
 
 
@@ -32,12 +32,12 @@ public class Arm {
 
     public void armScore(){
         for (Servo servo : arm) {
-            servo.setPosition(0.92);
+            servo.setPosition(0.82);
         }
     }
     public void armIntake(){
         for (Servo servo : arm) {
-            servo.setPosition(0.08);
+            servo.setPosition(0);
         }
     }
     public void clawOpen(){
