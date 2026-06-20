@@ -25,6 +25,7 @@ public class RobotCentricTeleop extends OpMode{
     private GamepadEx player1;
     private Arm arm;
     private double speedMultiply = 1;
+    private boolean goodToTransfer = false;
 
     public static double liftP = 0.09, liftI = 0.0, liftD = 0.0002, liftF = 0.0009;
 
@@ -99,6 +100,8 @@ public class RobotCentricTeleop extends OpMode{
         timer.reset();
         player1.readButtons();
 
+        goodToTransfer = arm.getClawPosition() < 0.6;
+
         if (poleLevel == 0) {
             liftSetPoint = 0;
         } else if (poleLevel == 1) {
@@ -122,16 +125,21 @@ public class RobotCentricTeleop extends OpMode{
             arm.clawOpen();
         }
 
-        if (gamepad1.right_trigger > 0.2) {
+       else if (gamepad1.right_trigger > 0.2) {
             arm.clawClose();
         }
 
-            if (player1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                arm.clawClose();
+       if (player1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+
                 poleLevel = 0;
-            } else if (player1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                poleLevel = desiredPoleLevel;
-            }
+       } else if (player1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                if (goodToTransfer) {
+                    poleLevel = desiredPoleLevel;
+                }
+                else {
+                    gamepad1.rumble(500);
+                }
+       }
 
             if (gamepad1.dpad_up) {
                 desiredPoleLevel = 1;

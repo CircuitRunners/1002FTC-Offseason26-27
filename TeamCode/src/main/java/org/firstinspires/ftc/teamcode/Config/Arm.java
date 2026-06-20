@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 public class Arm {
 
@@ -21,7 +22,11 @@ public class Arm {
         //servo = hardwareMap.get(Servo.class, "hoodServo");
 
 
-       // armRight.setDirection(Servo.Direction.REVERSE);
+       //armRight.setDirection(Servo.Direction.REVERSE);
+
+        armRight.setDirection(Servo.Direction.REVERSE);
+
+        claw.setDirection(Servo.Direction.REVERSE);
 
 
 
@@ -30,9 +35,21 @@ public class Arm {
 
     }
 
+    public void setArmPos(double pos){
+        armLeft.setPosition(Range.scale(pos,0,1,0.1,0.9));
+        armRight.setPosition(pos);
+    }
+
+    public double getArmLeftPos(){
+        return Range.scale(armLeft.getPosition(),0.1,0.9,0,1);
+    }
+
+    public double getArmRightPos(){
+        return armRight.getPosition();
+    }
     public void armScore(){
         for (Servo servo : arm) {
-            servo.setPosition(0.82);
+            servo.setPosition(0.6);
         }
     }
     public void armIntake(){
