@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpMode;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,6 +16,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Config.Arm;
 import org.firstinspires.ftc.teamcode.Config.MecanumDrive;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.List;
 
@@ -23,6 +26,7 @@ public class RobotCentricTeleop extends OpMode{
 
     private MecanumDrive drive;
     private GamepadEx player1;
+    private Follower follower;
     private Arm arm;
     private double speedMultiply = 1;
     private boolean goodToTransfer = false;
@@ -67,6 +71,10 @@ public class RobotCentricTeleop extends OpMode{
         rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
         leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
 
+        follower = Constants.createFollower(hardwareMap);
+        follower.setStartingPose(new Pose(72,72,Math.toRadians(90)));
+        follower.update();
+
 
 
         leftLift.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -100,6 +108,9 @@ public class RobotCentricTeleop extends OpMode{
         timer.reset();
         player1.readButtons();
 
+        Pose currentPose = follower.getPose();
+        handleDriving(currentPose);
+
         goodToTransfer = arm.getClawPosition() < 0.6;
 
         if (poleLevel == 0) {
@@ -122,16 +133,21 @@ public class RobotCentricTeleop extends OpMode{
 //        }
 
         if (gamepad1.left_trigger > 0.2) {
-            arm.clawOpen();
+            arm.clawClose();
         }
 
        else if (gamepad1.right_trigger > 0.2) {
-            arm.clawClose();
+            arm.clawOpen();
         }
 
        if (player1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
 
-                poleLevel = 0;
+           if (goodToTransfer) {
+               poleLevel = 0;
+           }
+           else {
+               gamepad1.rumble(500);
+           }
        } else if (player1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 if (goodToTransfer) {
                     poleLevel = desiredPoleLevel;
@@ -151,6 +167,9 @@ public class RobotCentricTeleop extends OpMode{
                 desiredPoleLevel = 4;
             }
 
+        if (player1.wasJustPressed(GamepadKeys.Button.SQUARE))
+            follower.setPose(new Pose(72, 72, Math.toRadians(90)));
+
 
             double forward = player1.getLeftY() * speedMultiply;
             double strafe = player1.getLeftX() * speedMultiply;
@@ -158,7 +177,7 @@ public class RobotCentricTeleop extends OpMode{
 
 
             /** Send inputs to drive class using method created in Mecanum Drive Class */
-            drive.drive(forward, strafe, rotate);
+           // drive.drive(forward, strafe, rotate);
 
 
             liftPos = rightLift.getCurrentPosition();
@@ -206,6 +225,18 @@ public class RobotCentricTeleop extends OpMode{
             telemetry.update();
         }
 
+
+    private void handleDriving(Pose pose) {
+        double forward = player1.getLeftY();
+        double strafe = player1.getLeftX();
+        double rotate = player1.getRightX();
+
+
+        double heading = pose.getHeading();
+        double theta = Math.atan2(forward, strafe) - heading;
+        double r = Math.hypot(forward, strafe);
+        drive.drive(r * Math.sin(theta), r * Math.cos(theta), rotate);
+    }
 }
 
 

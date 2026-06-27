@@ -36,7 +36,7 @@ public class ServoTester extends OpMode {
         //servo = hardwareMap.get(Servo.class, "hoodServo");
 
         servo.setPosition(0);
-       // servo.setDirection(Servo.Direction.REVERSE);
+        servo.setDirection(Servo.Direction.REVERSE);
 
         telemetry.addLine("Ready!");
         telemetry.update();

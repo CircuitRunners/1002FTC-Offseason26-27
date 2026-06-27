@@ -22,6 +22,10 @@ public class DiffySwerveTeleop extends OpMode {
     // Calibrate: set to 0, point pod forward, read "left raw angle" / "right raw angle"
     // in telemetry, then put that value here.
     public static double LEFT_ENCODER_OFFSET = 0;
+
+    public static double encoder_ratio = 2;
+
+    public static double turn_gain = 0.01;
     public static double RIGHT_ENCODER_OFFSET = 0; // ignored if SECOND_MODULE = false
 
     // --- Set true for a 2-pod robot (side by side) ---
@@ -48,7 +52,7 @@ public class DiffySwerveTeleop extends OpMode {
 
 
         DiffySwerveModule left = new DiffySwerveModule(
-                hardwareMap, "left", "motorA", "motorB", "azimuth_enc", LEFT_ENCODER_OFFSET);
+                hardwareMap, "left", "motor1", "motor2", "podEncoder", LEFT_ENCODER_OFFSET);
 
         if (SECOND_MODULE) {
             DiffySwerveModule right = new DiffySwerveModule(
@@ -70,6 +74,9 @@ public class DiffySwerveTeleop extends OpMode {
     public void loop() {
         timer.reset();
 
+
+        DiffySwerveModule.ENCODER_RATIO = encoder_ratio;
+
         // Toggle test mode with 'A'
         boolean aPressed = gamepad1.a;
         if (aPressed && !lastAState) TEST_MODE = !TEST_MODE;
@@ -85,6 +92,8 @@ public class DiffySwerveTeleop extends OpMode {
 
             drive.driveRobotCentric(vx, vy, omega);
         }
+
+        DiffySwerveModule.TURN_GAIN = turn_gain;
 
         drive.update();
 

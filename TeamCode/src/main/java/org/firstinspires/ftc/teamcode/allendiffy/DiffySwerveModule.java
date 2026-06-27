@@ -20,7 +20,7 @@ public class DiffySwerveModule {
     // Shared steering gain - tune via FTC Dashboard
     public static double TURN_GAIN = 0.01;
 
-    static final int ENCODER_RATIO = 4; // 4 encoder rotations per 1 pod rotation
+    public static double ENCODER_RATIO = 2; // 4 encoder rotations per 1 pod rotation
 
     private final DcMotorEx motorA, motorB;
     private final AnalogInput azimuthEncoder;

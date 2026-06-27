@@ -24,7 +24,7 @@ public class Arm {
 
        //armRight.setDirection(Servo.Direction.REVERSE);
 
-        armRight.setDirection(Servo.Direction.REVERSE);
+        armLeft.setDirection(Servo.Direction.REVERSE);
 
         claw.setDirection(Servo.Direction.REVERSE);
 
@@ -49,19 +49,19 @@ public class Arm {
     }
     public void armScore(){
         for (Servo servo : arm) {
-            servo.setPosition(0.6);
+            servo.setPosition(0.25);
         }
     }
     public void armIntake(){
         for (Servo servo : arm) {
-            servo.setPosition(0);
+            servo.setPosition(1);
         }
     }
     public void clawOpen(){
         claw.setPosition(0.65);
     }
     public void clawClose(){
-        claw.setPosition(0.515);
+        claw.setPosition(0.47);
     }
 
     public double getClawPosition(){
